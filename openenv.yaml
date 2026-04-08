@@ -1,0 +1,22 @@
+name: scalar-workspace
+type: environment
+description: Real-world productivity tasks environment for OpenEnv RL Challenge
+version: 1.0.0
+
+tasks:
+  - name: email_triage
+    difficulty: easy
+    description: Sort and prioritize incoming emails based on urgency and importance
+    
+  - name: data_cleaning
+    difficulty: medium
+    description: Clean and standardize messy dataset entries
+    
+  - name: scheduling
+    difficulty: hard
+    description: Optimize meeting schedules across multiple constraints
+
+metadata:
+  author: OpenEnv RL Challenge Participant
+  tags: [productivity, office-work, real-world]
+  license: MIT
