@@ -5,9 +5,6 @@ import traceback
 from openai import OpenAI
 from src.environment import ScalarWorkplaceEnvironment
 from src.core import Action
-from flask import Flask, request, jsonify
-
-app = Flask(__name__)
 
 # Read environment variables with defaults where required
 # Force correct router URL since api-inference.huggingface.co is deprecated
@@ -248,16 +245,6 @@ def run_inference():
             except:
                 pass
 
-@app.post("/reset")
-def reset():
-    """Reset environment for OpenEnv compatibility"""
-    try:
-        # Reset the environment state
-        global env
-        env = ScalarWorkplaceEnvironment()
-        return jsonify({"status": "success", "message": "Environment reset successfully"})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
 
 if __name__ == "__main__":
     run_inference()
