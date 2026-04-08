@@ -5,14 +5,23 @@ import traceback
 from openai import OpenAI
 from src.environment import ScalarWorkplaceEnvironment
 from src.core import Action
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
 
 # Read environment variables with defaults where required
-API_BASE_URL = os.getenv("API_BASE_URL", "https://api.openai.com/v1")
-MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4o-mini")
-HF_TOKEN = os.getenv("HF_TOKEN")
+# Force correct router URL since api-inference.huggingface.co is deprecated
+API_BASE_URL = "https://router.huggingface.co/v1"
+# Force correct Hugging Face model
+MODEL_NAME = "meta-llama/Llama-3.2-1B-Instruct"
+HF_TOKEN = os.getenv("HF_TOKEN") or os.getenv("Token_Hf")
 
 if HF_TOKEN is None:
-    raise ValueError("HF_TOKEN environment variable is required")
+    print("ERROR: HF_TOKEN environment variable is required")
+    print("Please set HF_TOKEN in Space settings")
+    print("Available environment variables:", list(os.environ.keys()))
+    # Exit gracefully instead of using dummy token
+    sys.exit(1)
 
 # Initialize OpenAI client
 client = OpenAI(
@@ -238,6 +247,17 @@ def run_inference():
                 env.close()
             except:
                 pass
+
+@app.post("/reset")
+def reset():
+    """Reset environment for OpenEnv compatibility"""
+    try:
+        # Reset the environment state
+        global env
+        env = ScalarWorkplaceEnvironment()
+        return jsonify({"status": "success", "message": "Environment reset successfully"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
 
 if __name__ == "__main__":
     run_inference()

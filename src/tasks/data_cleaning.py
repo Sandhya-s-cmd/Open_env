@@ -157,7 +157,7 @@ class DataCleaningEnvironment(BaseEnvironment):
                     fill_value = "Unknown"
                 
                 missing_count = self.current_data[column].isna().sum()
-                self.current_data[column].fillna(fill_value, inplace=True)
+                self.current_data[column] = self.current_data[column].fillna(fill_value)
                 result["rows_affected"] = missing_count
                 
         elif operation == "standardize_text":
